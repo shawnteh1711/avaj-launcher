@@ -9,14 +9,16 @@ public class Tower {
 
     public void register(Flyable p_flyable) {
         observers.add(p_flyable);
+        System.out.println("Tower says: " + p_flyable.getAircraftInfo() + " registered to weather tower.");
     }
 
     public void unregister(Flyable p_flyable) {
         observers.remove(p_flyable);
+        System.out.println("Tower says: " + p_flyable.getAircraftInfo() + " unregistered from weather tower.");
     }
 
     protected void conditionsChanged() {
-        for (Flyable aircraft : observers) {
+        for (Flyable aircraft : new ArrayList<>(observers)) {
             aircraft.updateConditions();
         }
     }

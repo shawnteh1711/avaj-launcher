@@ -17,10 +17,10 @@ public class AircraftFactory {
         switch (p_type.toLowerCase()) {
             case "helicopter":
                 return new Helicopter(Aircraft.nextId(), p_name, p_coordinates);
-//            case "jetplane":
-//                return new JetPlane(p_name, p_coordinates);
-//            case "baloon":
-//                return new Baloon(p_name, p_coordinates);
+            case "jetplane":
+                return new JetPlane(Aircraft.nextId(), p_name, p_coordinates);
+            case "baloon":
+                return new Baloon(Aircraft.nextId(), p_name, p_coordinates);
             default:
                 throw new IllegalArgumentException("Unknown aircraft type: " + p_type);
         }

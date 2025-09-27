@@ -1,6 +1,7 @@
 package com.flight.simulation;
 
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import java.util.ArrayList;
@@ -10,52 +11,110 @@ import java.util.stream.Collectors;
 import java.io.IOException;
 
 public class Parser {
+
+    private Parser() {}
+
     public static ParsedData parseScenarioFile(String scenarioFile) throws IOException {
-        try {
-            if (!Files.exists(Paths.get(scenarioFile))) {
-                throw new IOException("Scenario file not found: " + scenarioFile);
-            }
-        } catch (IOException e) {
-            System.err.println("Error accessing the scenario file: " + e.getMessage());
-            throw e;
-        }
+        getScenarioFilePathOrThrow(scenarioFile);
 
-        List<String> fileLines = Files
-                .lines(Paths.get(scenarioFile))
-                .filter(line -> !line.trim().isEmpty())
-                .collect(Collectors.toList());
+        List<String> fileLines = parseScenarioFileLines(scenarioFile);
 
-        if (fileLines.isEmpty()) {
-            System.err.println("Scenario file is empty or contains only blank lines.");
-        }
-
-        fileLines.forEach(System.out::println);
-        int simulationSteps = 0;
-        try {
-            simulationSteps = Integer.parseInt(fileLines.get(0));
-
-            System.out.println("Simulation Steps: " + simulationSteps);
-        } catch (NumberFormatException e) {
-            System.err.println("Invalid number format for simulation steps: " + fileLines.get(0));
-        }
+        int simulationSteps = parseSimulationSteps(fileLines.get(0));
 
         List<AircraftData> aircraftDataList = new ArrayList<>();
         for (int i = 1; i < fileLines.size(); i++) {
-            String[] parts = fileLines.get(i).split(" ");
-            if (parts.length == 5) {
-                String aircraftType = parts[0];
-                String aircraftName = parts[1];
-                int longitude = Integer.parseInt(parts[2]);
-                int latitude = Integer.parseInt(parts[3]);
-                int height = Integer.parseInt(parts[4]);
-                Coordinates coordinates = Coordinates.create(longitude, latitude, height);
-                aircraftDataList.add(new AircraftData(aircraftType, aircraftName, coordinates));
-
-                System.out.printf("Aircraft: %s %s at (%d, %d, %d)%n", aircraftType, aircraftName, longitude, latitude, height);
-            } else {
-                throw new IllegalArgumentException("Invalid line format at line " + (i + 1) + ": " + fileLines.get(i));
-            }
+            aircraftDataList.add(parseAircraftData(fileLines.get(i), i + 1));
         }
         return new ParsedData(simulationSteps, aircraftDataList);
+    }
+
+    private static List<String> parseScenarioFileLines(String scenarioFile) throws IOException {
+        List<String> fileLines;
+
+        try {
+            fileLines = Files
+                    .lines(Paths.get(scenarioFile))
+                    .map(String::trim)
+                    .filter(line -> !line.isEmpty())
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new IOException("Failed to read scenario file: " + scenarioFile, e);
+        }
+
+        if (fileLines.isEmpty()) {
+            throw new IllegalArgumentException("Scenario file is empty or contains only blank lines.");
+        }
+        return fileLines;
+    }
+
+    private static AircraftData parseAircraftData(String line, int lineNumber) {
+        String[] parts = line.split(" ");
+        if (parts.length != 5) {
+            throw new IllegalArgumentException("Invalid line format at line " + lineNumber + ": " + line);
+        }
+
+        String aircraftType = parts[0];
+        String aircraftName = parts[1];
+        int longitude;
+        int latitude;
+        int height;
+
+        try {
+            longitude = Integer.parseInt(parts[2]);
+            latitude = Integer.parseInt(parts[3]);
+            height = Integer.parseInt(parts[4]);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid coordinate format at line " + lineNumber + ": " + line, e);
+        }
+        validateAircraftType(aircraftType, lineNumber, line);
+        validateAircraftName(aircraftName, lineNumber, line);
+        validateCoordinates(longitude, latitude, height, lineNumber, line);
+        Coordinates coordinates = new Coordinates(longitude, latitude, height);
+
+        return new AircraftData(aircraftType, aircraftName, coordinates);
+    }
+
+    private static Path getScenarioFilePathOrThrow(String scenarioFile) throws IOException {
+        Path path = Paths.get(scenarioFile);
+        if (!Files.exists(path)) {
+            throw new IOException("Scenario file not found: " + scenarioFile);
+        }
+        if (!Files.isReadable(path)) {
+            throw new IOException("Scenario file is not readable: " + scenarioFile);
+        }
+        return path;
+    }
+
+    private static int parseSimulationSteps(String line) {
+        try {
+            int steps = Integer.parseInt(line);
+            if (steps <= 0) {
+                throw new IllegalArgumentException("Simulation steps must be a positive integer.");
+            }
+            return steps;
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid number format for simulation steps: " + line, e);
+        }
+    }
+
+    private static void validateAircraftType(String aircraftType, int lineNumber, String line) {
+        if (!aircraftType.equals("Helicopter") && !aircraftType.equals("JetPlane") && !aircraftType.equals("Baloon")) {
+            throw new IllegalArgumentException("Invalid aircraft type at line " + lineNumber + ": " + line);
+        }
+    }
+
+    private static void validateAircraftName(String aircraftName, int lineNumber, String line) {
+        if (!aircraftName.matches("[a-zA-Z0-9_]+")) {
+            throw new IllegalArgumentException("Invalid aircraft name at line " + lineNumber + ": " + line);
+        }
+    }
+
+    private static void validateCoordinates(int longitude, int latitude, int height, int lineNumber, String line) {
+        if (longitude < 0 || latitude < 0 || height < 0) {
+            throw new IllegalArgumentException("Negative coordinate value at line " + lineNumber + ": " + line);
+        }
+        if (height > 100) {
+            throw new IllegalArgumentException("Height exceeds maximum limit of 100 at line " + lineNumber + ": " + line);
+        }
     }
 }

@@ -1,11 +1,13 @@
 package com.flight.simulation;
 
 public class WeatherTower extends Tower {
+
     public String getWeather(Coordinates p_coordinates) {
-        return "getWeather";
+        return WeatherProvider.getProvider().getCurrentWeather(p_coordinates);
     }
 
     public void changeWeather() {
+        super.conditionsChanged();
     }
 
 }

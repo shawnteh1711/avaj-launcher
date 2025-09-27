@@ -17,11 +17,27 @@ public abstract class Aircraft implements Flyable {
         return ++idCounter;
     }
 
+    protected void updatePosition(Coordinates newCoordinates) {
+        if (this.coordinates.hasLanded()) {
+            return;
+        }
+
+        if (!this.coordinates.hasLanded() && newCoordinates.hasLanded()) {
+            System.out.println(this.getAircraftInfo() + " landing.");
+            this.weatherTower.unregister(this);
+        }
+        this.coordinates = newCoordinates;
+    }
+
     @Override
     public void registerTower(WeatherTower p_tower) {
         this.weatherTower = p_tower;
-        p_tower.register(this);
-        System.out.println("Tower says: " + this.name + "#" + this.id + " registered to weather tower.");
+        this.weatherTower.register(this);
+    }
+
+    @Override
+    public String getAircraftInfo() {
+        return this.getClass().getSimpleName() + "#" + this.name + "#(" + this.id + ")";
     }
 
 }
