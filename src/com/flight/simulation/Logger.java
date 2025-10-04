@@ -33,6 +33,8 @@ public class Logger {
     public void close() {
         if (writer != null) {
             writer.close();
+            writer = null;
+            instance = null;
         }
     }
 }

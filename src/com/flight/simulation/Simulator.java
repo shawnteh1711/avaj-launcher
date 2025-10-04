@@ -5,6 +5,7 @@ public class Simulator {
     private Simulator() {}
 
     public static void runSimulation(ParsedData parsedData) {
+        Logger logger = Logger.getLogger();
         WeatherTower weatherTower = new WeatherTower();
 
         for (AircraftData data: parsedData.getAircraftDataList()) {
@@ -19,6 +20,8 @@ public class Simulator {
         for (int i = 0; i < parsedData.getSimulationSteps(); i++) {
             weatherTower.changeWeather();
         }
+
+        logger.close();
     }
 
     private static Flyable createAircraft(AircraftData data) {

@@ -1,2 +1,3 @@
 find * -name "*.class" -type f -delete
-rm -rf simulator.txt
+rm -f simulator.txt
+rm -f sources.txt
