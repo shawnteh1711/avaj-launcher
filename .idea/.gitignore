@@ -1,4 +1,11 @@
 # Default ignored files
 /shelf/
 /workspace.xml
-.class
+
+# Compiled class files
+*.class
+out/
+
+# Generated files
+simulation.txt
+sources.txt
