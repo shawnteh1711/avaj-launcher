@@ -7,6 +7,8 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.error.customException.ScenarioParseException;
+
 
 public class Main {
     public static void main(String[] args) {
@@ -18,7 +20,7 @@ public class Main {
         try {
             ParsedData parsedData = Parser.parseScenarioFile(args[0]);
             Simulator.runSimulation(parsedData);
-        } catch (IOException e) {
+        } catch (ScenarioParseException e) {
             System.err.println("Error reading scenario file: " + e.getMessage());
             System.exit(1);
         } catch (IllegalArgumentException e) {

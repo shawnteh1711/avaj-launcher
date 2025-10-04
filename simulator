@@ -1,3 +1,7 @@
 find * -name "*.java" > sources.txt
 javac @sources.txt
 java -cp src com.flight.simulation.Main scenario.txt
+cat -e simulation.txt
+
+
+java -cp src test.flight.simulation.Main

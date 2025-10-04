@@ -6,6 +6,7 @@ public abstract class Aircraft implements Flyable {
     protected String name;
     protected Coordinates coordinates;
     protected WeatherTower weatherTower;
+    protected Logger logger = Logger.getLogger();
 
     protected Aircraft(long p_id, String p_name, Coordinates p_coordinates) {
         this.id = p_id;
@@ -23,7 +24,7 @@ public abstract class Aircraft implements Flyable {
         }
 
         if (!this.coordinates.hasLanded() && newCoordinates.hasLanded()) {
-            System.out.println(this.getAircraftInfo() + " landing.");
+            logger.log(this.getAircraftInfo() + " landing.");
             this.weatherTower.unregister(this);
         }
         this.coordinates = newCoordinates;
@@ -37,7 +38,11 @@ public abstract class Aircraft implements Flyable {
 
     @Override
     public String getAircraftInfo() {
-        return this.getClass().getSimpleName() + "#" + this.name + "#(" + this.id + ")";
+        return this.getClass().getSimpleName() + "#" + this.name + "(" + this.id + ")";
+    }
+
+    public void logMessage(String message) {
+        logger.log(this.getAircraftInfo() + ": " + message);
     }
 
 }

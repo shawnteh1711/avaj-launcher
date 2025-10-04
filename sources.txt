@@ -1,3 +1,4 @@
+src/com/error/customException/ScenarioParseException.java
 src/com/flight/simulation/Aircraft.java
 src/com/flight/simulation/AircraftData.java
 src/com/flight/simulation/AircraftFactory.java
@@ -7,6 +8,7 @@ src/com/flight/simulation/CustomException.java
 src/com/flight/simulation/Flyable.java
 src/com/flight/simulation/Helicopter.java
 src/com/flight/simulation/JetPlane.java
+src/com/flight/simulation/Logger.java
 src/com/flight/simulation/Main.java
 src/com/flight/simulation/ParsedData.java
 src/com/flight/simulation/Parser.java
@@ -14,3 +16,6 @@ src/com/flight/simulation/Simulator.java
 src/com/flight/simulation/Tower.java
 src/com/flight/simulation/WeatherProvider.java
 src/com/flight/simulation/WeatherTower.java
+src/test/flight/simulation/Main.java
+src/test/flight/simulation/ParserTest.java
+src/test/flight/simulation/SimulatorTest.java

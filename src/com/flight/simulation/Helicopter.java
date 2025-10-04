@@ -13,23 +13,23 @@ public class Helicopter extends Aircraft {
         switch (weather) {
             case "SUN":
                 newCoordinates = this.coordinates.change(10, 0, 2);
-                System.out.println(this.getAircraftInfo() + ": It's sunny. Let's enjoy the good weather and take " +
+                logger.log(this.getAircraftInfo() + ": It's sunny. Let's enjoy the good weather and take " +
                                            "some pics.");
                 break;
             case "RAIN":
                 newCoordinates = this.coordinates.change(5, 0, 0);
-                System.out.println(this.getAircraftInfo() + ": It's raining. Better watch out for lightings.");
+                logger.log(this.getAircraftInfo() + ": It's raining. Better watch out for lightings.");
                 break;
             case "FOG":
                 newCoordinates = this.coordinates.change(1, 0, 0);
-                System.out.println(this.getAircraftInfo() + ": It's foggy. Can't see anything.");
+                logger.log(this.getAircraftInfo() + ": It's foggy. Can't see anything.");
                 break;
             case "SNOW":
                 newCoordinates = this.coordinates.change(0, 0, -12);
-                System.out.println(this.getAircraftInfo() + ": It's snowing. My rotor is going to freeze.");
+                logger.log(this.getAircraftInfo() + ": It's snowing. My rotor is going to freeze.");
                 break;
         }
 
-        updatePosition(newCoordinates);
+        super.updatePosition(newCoordinates);
     }
 }

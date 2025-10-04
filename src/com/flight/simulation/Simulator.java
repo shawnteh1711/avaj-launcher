@@ -2,12 +2,14 @@ package com.flight.simulation;
 
 public class Simulator {
 
+    private Simulator() {}
+
     public static void runSimulation(ParsedData parsedData) {
         WeatherTower weatherTower = new WeatherTower();
-        AircraftFactory aircraftFactory = AircraftFactory.getInstance();
+
         for (AircraftData data: parsedData.getAircraftDataList()) {
             try {
-                Flyable flyable = aircraftFactory.newAircraft(data.getType(), data.getName(), data.getCoordinates());
+                Flyable flyable = createAircraft(data);
                 flyable.registerTower(weatherTower);
             } catch (IllegalArgumentException e) {
                 System.err.println(e.getMessage());
@@ -19,10 +21,8 @@ public class Simulator {
         }
     }
 
-    private static void createAircraft(ParsedData parsedData) {
+    private static Flyable createAircraft(AircraftData data) {
         AircraftFactory aircraftFactory = AircraftFactory.getInstance();
-        for (AircraftData data : parsedData.getAircraftDataList()) {
-            Flyable flyable = aircraftFactory.newAircraft(data.getType(), data.getName(), data.getCoordinates());
-        }
+        return aircraftFactory.newAircraft(data.getType(), data.getName(), data.getCoordinates());
     }
 }

@@ -2,15 +2,22 @@ package com.flight.simulation;
 
 public class AircraftFactory {
     private static AircraftFactory instance;
+    private static int instanceCount = 0;
 
     private AircraftFactory() {
+        instanceCount++;
     }
 
     public static AircraftFactory getInstance() {
         if (instance == null) {
             instance = new AircraftFactory();
+            instanceCount = 1;
         }
         return instance;
+    }
+
+    public static int getInstanceCount() {
+        return instanceCount;
     }
 
     public Flyable newAircraft(String p_type, String p_name, Coordinates p_coordinates) {
