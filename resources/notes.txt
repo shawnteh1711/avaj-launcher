@@ -1,0 +1,20 @@
+Creational
+1. singleton design
+Pros
+- guaranteed single instance
+- global access parseSimulationSteps
+Cons
+- testing difficulties
+- threading issue
+- same like global variable
+
+2. Builder
+3. Factory
+
+Structural
+1. Facade
+2. Adapter
+
+Behaviour
+1. Strategy
+2. Observer
