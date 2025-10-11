@@ -1,7 +1,5 @@
 package com.flight.simulation;
 
-import java.util.Random;
-
 public class WeatherProvider {
     private static WeatherProvider instance = null;
 
