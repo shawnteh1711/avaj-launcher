@@ -1,16 +1,9 @@
 package com.flight.simulation;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.error.customException.ScenarioParseException;
 
-
 public class Main {
+
     public static void main(String[] args) {
         if (args.length != 1 || !args[0].endsWith(".txt")) {
             System.err.println("Usage: java -cp com.flight.simulation.Main <scenario.txt>");

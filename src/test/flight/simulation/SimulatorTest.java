@@ -1,5 +1,10 @@
 package test.flight.simulation;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+
 import com.error.customException.ScenarioParseException;
 import com.flight.simulation.AircraftFactory;
 import com.flight.simulation.ParsedData;
@@ -8,17 +13,23 @@ import com.flight.simulation.Simulator;
 import com.flight.simulation.WeatherTower;
 
 public class SimulatorTest {
-    private static final String TESTFILE = "scenario.txt";
 
     public static void runTests() {
         System.out.println("SimulatorTest class for testing simulation");
-        testCreatedWeatherTowerInstance();
+        testInstanceCreated();
     }
 
-    private static void testCreatedWeatherTowerInstance() {
+    private static void testInstanceCreated() {
+        String testFile = "test_scenario.txt";
 
         try {
-            ParsedData parsedData = Parser.parseScenarioFile(TESTFILE);
+            Files.write(Paths.get(testFile), Arrays.asList(
+                    "5",
+                    "JetPlane JP1 10 20 30",
+                    "Helicopter H1 15 25 35",
+                    "Baloon B1 10 20 30"
+            ));
+            ParsedData parsedData = Parser.parseScenarioFile(testFile);
             Simulator.runSimulation(parsedData);
 
             if (WeatherTower.getInstanceCount() == 1 && AircraftFactory.getInstanceCount() == 1) {
@@ -31,6 +42,12 @@ public class SimulatorTest {
             System.out.println("Error during test: " + e.getMessage());
         } catch (Exception e) {
             System.out.println("Unexpected error during test: " + e.getMessage());
+        } finally {
+            try {
+                Files.deleteIfExists(Paths.get(testFile));
+            } catch (IOException e) {
+                // Ignore
+            }
         }
 
     }

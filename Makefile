@@ -29,16 +29,30 @@ jar: compile
 
 # Run the main program
 run:
-	java -cp $(OUT_DIR) $(MAIN_CLASS) $(SCENARIO_FILE)
-	cat -e $(OUTPUT_FILE)
+	@java -cp $(OUT_DIR) $(MAIN_CLASS) $(SCENARIO_FILE); EXIT_CODE=$$?; \
+	if [ $$EXIT_CODE -eq 1 ]; then \
+		echo "Program end with invalid scenario file"; \
+	else \
+		if [ -f $(OUTPUT_FILE) ]; then \
+			echo "=== Simulation Output ==="; \
+			cat -e $(OUTPUT_FILE); \
+		fi; \
+	fi
 
 # Run using jar
 runJar:
-	java -jar $(JAR_FILE) $(SCENARIO_FILE)
-	cat -e $(OUTPUT_FILE)
+	@java -jar $(JAR_FILE) $(SCENARIO_FILE); EXIT_CODE=$$?; \
+	if [ $$EXIT_CODE -eq 1 ]; then \
+		echo "Program end with invalid scenario file"; \
+	else \
+		if [ -f $(OUTPUT_FILE) ]; then \
+			echo "=== Simulation Output ==="; \
+			cat -e $(OUTPUT_FILE); \
+		fi; \
+	fi
 
 # Run tests
-test:
+test: compile
 	java -cp $(OUT_DIR) $(TEST_CLASS)
 
 # Clean up compiled files and output
