@@ -6,3 +6,9 @@ cat -e simulation.txt
 # run test
 echo -e "\nRun test\n"
 java -cp out test.flight.simulation.Main
+
+# compile and run jar
+find * -name "*.java" > sources.txt
+javac -d out @sources.txt
+java cfe avaj-launcher.jar com.flight.simulation.Main -C out .
+java -jar avaj-launcher.jar scenario.txt
